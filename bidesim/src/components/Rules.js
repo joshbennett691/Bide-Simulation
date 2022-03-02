@@ -1,29 +1,47 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Rules.css";
 import RuleBar from "./RuleBar";
-import TestAudioOne from "./Audio/test_1.mp3";
-import TestAudioTwo from "./Audio/test_2.mp3";
-import TestAudioThree from "./Audio/test_3.mp3";
-import TestAudioFour from "./Audio/test_4.mp3";
-import TestAudioFive from "./Audio/test_5.mp3";
+import RuleBar2 from "./RuleBar2";
+import RuleBar3 from "./RuleBar3";
+import Button from "react-bootstrap/esm/Button";
 
-class Rules extends React.Component {
-  state = {};
+const Rules = () => {
+  const [ruleComponents, setRuleComponents] = useState([]);
 
-  render() {
-    return (
-      <>
-        <h1>Rules</h1>
+  const addRule = () => {
+    setRuleComponents([...ruleComponents, RuleBar]);
+  };
+
+  const removeRule = (rule) => {
+    setRuleComponents(ruleComponents.filter((i) => i !== rule));
+  };
+
+  useEffect(() => {
+    const getRuleComponent = localStorage.getItem("ruleComponent");
+
+    if (getRuleComponent) {
+      setRuleComponents(JSON.parse(getRuleComponent));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("ruleComponent", JSON.stringify(ruleComponents));
+  });
+
+  return (
+    <>
+      <div className="main">
+        <h1 className="inner" style={{ color: "black" }}>
+          Rules
+        </h1>
         <div className="flex-container">
-          <RuleBar trigger="Movement" audio={TestAudioOne} />
-          <RuleBar trigger="Movement" audio={TestAudioTwo} />
-          <RuleBar trigger="Hand Wave" audio={TestAudioThree} />
-          <RuleBar trigger="Movement" audio={TestAudioFour} />
-          <RuleBar trigger="Movement" audio={TestAudioFive} />
+          <RuleBar />
+          <RuleBar2 />
+          <RuleBar3 />
         </div>
-      </>
-    );
-  }
-}
+      </div>
+    </>
+  );
+};
 
 export default Rules;

@@ -24,3 +24,10 @@
   flex: 0 1 auto;
   align-self: auto;
 }
+
+.inner {
+  width: 50%;
+  margin: 0 auto;
+  font-size: 60px;
+  text-align: center;
+}

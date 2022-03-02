@@ -27,7 +27,7 @@ import { get, set } from "idb-keyval";
 //     let duration = {};
 //     let url = "";
 
-const RuleBar = () => {
+const RuleBar2 = () => {
   const audioCtx = new AudioContext();
   let buffer = null;
 
@@ -37,7 +37,7 @@ const RuleBar = () => {
   const [chunks, setChunks] = useState([]);
   const [duration, setDuration] = useState({});
   const [url, setUrl] = useState("");
-  const [time, setTime] = useState(["02:00", "05:00"]);
+  const [time, setTime] = useState(["09:00", "12:00"]);
   const [expand, setExpand] = useState("Expand");
   const [checkboxValue, setCheckboxValue] = useState(false);
   const [contentDisplay, setContentDisplay] = useState("none");
@@ -70,17 +70,17 @@ const RuleBar = () => {
   });
 
   useEffect(() => {
-    const getActive = localStorage.getItem("active");
-    const getTime = localStorage.getItem("time");
-    const getCheckboxValue = localStorage.getItem("checkboxValue");
+    const getActive = localStorage.getItem("active2");
+    const getTime = localStorage.getItem("time2");
+    const getCheckboxValue = localStorage.getItem("checkboxValue2");
     // const getContentDisplay = localStorage.getItem("contentDisplay");
-    const getColour = localStorage.getItem("colour");
-    const getAudio = localStorage.getItem("audio");
-    const getPlaying = localStorage.getItem("playing");
-    const getTrigger = localStorage.getItem("trigger");
-    const getEffect = localStorage.getItem("effect");
-    const getColourDisplay = localStorage.getItem("colourDisplay");
-    const getDocument = localStorage.getItem("document");
+    const getColour = localStorage.getItem("colour2");
+    const getAudio = localStorage.getItem("audio2");
+    const getPlaying = localStorage.getItem("playing2");
+    const getTrigger = localStorage.getItem("trigger2");
+    const getEffect = localStorage.getItem("effect2");
+    const getColourDisplay = localStorage.getItem("colourDisplay2");
+    const getDocument = localStorage.getItem("document2");
 
     if (getActive) {
       setActive(JSON.parse(getActive));
@@ -118,17 +118,17 @@ const RuleBar = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("active", JSON.stringify(active));
-    localStorage.setItem("time", JSON.stringify(time));
-    localStorage.setItem("contentDisplay", JSON.stringify(contentDisplay));
-    localStorage.setItem("checkboxValue", JSON.stringify(checkboxValue));
-    localStorage.setItem("colour", JSON.stringify(colour));
-    localStorage.setItem("audio", JSON.stringify(audio));
-    localStorage.setItem("playing", JSON.stringify(playing));
-    localStorage.setItem("trigger", JSON.stringify(trigger));
-    localStorage.setItem("effect", JSON.stringify(effect));
-    localStorage.setItem("colourDisplay", JSON.stringify(colourDisplay));
-    localStorage.setItem("document", JSON.stringify(document));
+    localStorage.setItem("active2", JSON.stringify(active));
+    localStorage.setItem("time2", JSON.stringify(time));
+    localStorage.setItem("contentDisplay2", JSON.stringify(contentDisplay));
+    localStorage.setItem("checkboxValue2", JSON.stringify(checkboxValue));
+    localStorage.setItem("colour2", JSON.stringify(colour));
+    localStorage.setItem("audio2", JSON.stringify(audio));
+    localStorage.setItem("playing2", JSON.stringify(playing));
+    localStorage.setItem("trigger2", JSON.stringify(trigger));
+    localStorage.setItem("effect2", JSON.stringify(effect));
+    localStorage.setItem("colourDisplay2", JSON.stringify(colourDisplay));
+    localStorage.setItem("document2", JSON.stringify(document));
   });
 
   const handleAudioStop = async (data) => {
@@ -329,4 +329,4 @@ const RuleBar = () => {
   );
 };
 
-export default RuleBar;
+export default RuleBar2;

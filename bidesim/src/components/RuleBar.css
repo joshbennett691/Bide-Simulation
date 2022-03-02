@@ -9,6 +9,12 @@
 .item {
   display: inline-block;
   padding: 5px;
+  vertical-align: middle;
+}
+
+.checkbox-item {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 input[type="checkbox"] {
@@ -24,6 +30,63 @@ input[type="checkbox"] {
   transform: translateY(-50%);
 }
 
-.record-controls {
+.right-item {
   float: right;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+}
+
+.inner {
+  width: 50%;
+  margin: 0 auto;
+  color: white;
+  font-size: 60px;
+  text-align: center;
+}
+
+.btn-item {
+  margin: 1px;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.flex-item {
+  display: flex;
+  order: 0;
+  flex: 0 1 auto;
+  align-self: auto;
+  justify-content: center;
+}
+
+.trigger-event {
+  display: flex;
+  order: 0;
+  flex: 0 1 auto;
+  align-self: auto;
+  justify-content: center;
+}
+
+.card-body {
+  background-color: #c7f1e6;
+  outline: rgb(107, 88, 255);
+  outline-style: auto;
 }

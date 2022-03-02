@@ -1,0 +1,25 @@
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+}
+
+.inner {
+  width: 50%;
+  margin: 0 auto;
+  color: white;
+  font-size: 60px;
+  text-align: center;
+}
+
+.btn-item {
+  margin: 1px;
+}
