@@ -14,6 +14,8 @@ import DeviceBidePurple from "./Images/bide_display_off_purple.png";
 import DeviceRed from "./Images/bide_display_red.png";
 import Button from "react-bootstrap/esm/Button";
 import "./Simulation.css";
+import ReactHowler from "react-howler/lib/ReactHowler";
+import Localbase from "localbase";
 
 const Simulation = () => {
   const [currentTime, setCurrentTime] = useState("00:00");
@@ -26,6 +28,10 @@ const Simulation = () => {
   const [movement1, setMovement1] = useState(localStorage.getItem("trigger"));
   const [movement2, setMovement2] = useState(localStorage.getItem("trigger2"));
   const [movement3, setMovement3] = useState(localStorage.getItem("trigger3"));
+  const [playing, setPlaying] = useState(false);
+  const [theAudio, setTheAudio] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const [effect, setEffect] = useState(localStorage.getItem("effect"));
   const [effectLoop, setEffectLoop] = useState(false);
@@ -45,6 +51,8 @@ const Simulation = () => {
   const [ruleThreeTime, setRuleThreeTime] = useState(
     JSON.parse(localStorage.getItem("time3"))
   );
+
+  let db = new Localbase("db");
 
   useEffect(() => {
     const getActive1 = localStorage.getItem("active");
@@ -80,6 +88,17 @@ const Simulation = () => {
     console.log(ruleThreeTime);
   }, []);
 
+  useEffect(() => {
+    db.collection("audio")
+      .doc({ id: "audio1" })
+      .get()
+      .then((document) => {
+        console.log(document.audio);
+        setTheAudio(document.audio);
+        setIsLoading(false);
+      });
+  }, [theAudio]);
+
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   const handleTimeChange = async (time) => {
@@ -105,6 +124,7 @@ const Simulation = () => {
       await setBideState(DeviceWhite);
       setEventBar("Device On");
       setEventBarColour("Green");
+      setPlaying(true);
     } else if (bideSwitch) {
       setBideSwitch(false);
       setContentDisplay("none");
@@ -134,6 +154,7 @@ const Simulation = () => {
       await setEventBarColour("Green");
       await setEffectLoop(false);
       await console.log(effectLoop);
+      await setIsPlaying(false);
     } else {
       await setEventBar("No Trigger to Acknowledge");
       await setEventBarColour("Red");
@@ -419,6 +440,7 @@ const Simulation = () => {
         parseTimeCurrentTime.getTime() <= parseTimeOneEnd.getTime()
       ) {
         if (JSON.parse(movement1) === "Movement") {
+          setIsPlaying(true);
           console.log("true");
           setEventBar("Movement Event Detected");
           setEventBarColour("Green");
@@ -694,10 +716,23 @@ const Simulation = () => {
     }
   };
 
-  // const handleGettingActiveRules = async () => {
-  //   await setActive1(localStorage.getItem("active"));
-  //   await console.log(active1);
-  // };
+  const playAudio = () => {
+    db.collection("audio")
+      .doc({ id: "audio1" })
+      .get()
+      .then((document) => {
+        console.log(document.audio);
+        return (
+          <div>
+            <ReactHowler src={document.audio} playing={true} />;
+          </div>
+        );
+      });
+  };
+
+  if (isLoading) {
+    return <div>Audio is loading</div>;
+  }
 
   return (
     <div>
@@ -747,6 +782,7 @@ const Simulation = () => {
             <h1>Current Time:</h1>
             <TimePicker onChange={handleTimeChange} value={currentTime} />
           </div>
+          <ReactHowler src={theAudio} playing={isPlaying} />
         </div>
       </div>
     </div>

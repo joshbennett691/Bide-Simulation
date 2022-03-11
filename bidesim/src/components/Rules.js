@@ -31,7 +31,7 @@ const Rules = () => {
   return (
     <>
       <div className="main">
-        <h1 className="inner" style={{ color: "black" }}>
+        <h1 className="inner" style={{ color: "rgb(107, 88, 255)" }}>
           Rules
         </h1>
         <div className="flex-container">

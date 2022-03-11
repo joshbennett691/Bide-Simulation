@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./RuleBar.css";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 // import { Button } from "@mui/material";
@@ -21,6 +21,8 @@ import AudioPlayer from "./AudioPlayer";
 import Button from "react-bootstrap/esm/Button";
 import Dexie from "dexie";
 import { get, set } from "idb-keyval";
+import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
+import { ArrowDownCircleFill, ArrowUpCircleFill } from "react-bootstrap-icons";
 
 // let blob = {};
 //     let chunks = [];
@@ -30,15 +32,16 @@ import { get, set } from "idb-keyval";
 const RuleBar3 = () => {
   const audioCtx = new AudioContext();
   let buffer = null;
-
-  const db = new Dexie("rulesDB");
+  const audioRef = useRef();
   const [active, setActive] = useState(false);
   const [blob, setBlob] = useState({});
   const [chunks, setChunks] = useState([]);
   const [duration, setDuration] = useState({});
   const [url, setUrl] = useState("");
-  const [time, setTime] = useState(["15:00", "20:00"]);
-  const [expand, setExpand] = useState("Expand");
+  const [time, setTime] = useState(["17:00", "22:00"]);
+  const [expand, setExpand] = useState("fas fa-caret-down");
+  const [theAudio, setTheAudio] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const [checkboxValue, setCheckboxValue] = useState(false);
   const [contentDisplay, setContentDisplay] = useState("none");
   const [colour, setColour] = useState("");
@@ -69,7 +72,10 @@ const RuleBar3 = () => {
     },
   });
 
+  let db = new Localbase("db");
+
   useEffect(() => {
+    initializeDB();
     const getActive = localStorage.getItem("active3");
     const getTime = localStorage.getItem("time3");
     const getCheckboxValue = localStorage.getItem("checkboxValue3");
@@ -130,6 +136,17 @@ const RuleBar3 = () => {
     localStorage.setItem("colourDisplay3", JSON.stringify(colourDisplay));
     localStorage.setItem("document3", JSON.stringify(document));
   });
+
+  useEffect(() => {
+    db.collection("audio3")
+      .doc({ id: "audio3" })
+      .get()
+      .then((document) => {
+        console.log(document.audio);
+        setTheAudio(document.audio);
+        setIsLoading(false);
+      });
+  }, [theAudio]);
 
   const handleAudioStop = async (data) => {
     setAudioDetails(data);
@@ -201,10 +218,10 @@ const RuleBar3 = () => {
   const displayContent = () => {
     if (contentDisplay === "none") {
       setContentDisplay("block");
-      setExpand("Shrink");
+      setExpand("fas fa-caret-up");
     } else {
       setContentDisplay("none");
-      setExpand("Expand");
+      setExpand("fas fa-caret-down");
     }
   };
 
@@ -222,6 +239,98 @@ const RuleBar3 = () => {
 
   const endAudio = () => {
     setPlaying(false);
+  };
+
+  //AUDIO STUFF
+  let recorder;
+
+  const startRecording = () => {
+    recorder.startRecording();
+  };
+
+  const updateSound = (src) => {
+    setAudio(src);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.load();
+      audioRef.current.play();
+    }
+  };
+
+  const stopRecording = () => {
+    recorder.stopRecording(() => {
+      let blob = recorder.getBlob();
+      // invokeSaveAsDialog(blob);this is a tst to see how good it works and how long the audio can keep recording for
+      blobToBase64(blob);
+      // updateSound();
+      db.collection("audio3")
+        .doc({ id: "audio3" })
+        .get()
+        .then((document) => {
+          console.log(document.audio);
+          updateSound(document.audio);
+          window.location.reload();
+        });
+    });
+  };
+
+  const getAudio = () => {
+    db.collection("audio3")
+      .doc({ id: "audio3" })
+      .get()
+      .then((document) => {
+        return document.audio;
+      });
+  };
+
+  const microphoneRecorder = () => {
+    navigator.mediaDevices
+      .getUserMedia({
+        video: false,
+        audio: true,
+      })
+      .then(async function (stream) {
+        recorder = RecordRTC(stream, {
+          type: "audio",
+        });
+      });
+  };
+
+  const blobToBase64 = (blob) => {
+    var reader = new window.FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = function () {
+      let base64data = reader.result;
+      db.collection("audio3").doc({ id: "audio3" }).update({
+        audio: base64data,
+      });
+    };
+  };
+
+  const initializeDB = () => {
+    db.collection("audio3")
+      .get()
+      .then((audioData) => {
+        if (audioData.length === 0) {
+          db.collection("audio3").add({
+            id: "audio3",
+            audio: "",
+          });
+        } else {
+        }
+      });
+  };
+
+  if (isLoading) {
+    return <div>Rule is loading</div>;
+  }
+
+  const loadAudio = () => {
+    if (theAudio !== "") {
+      return theAudio;
+    } else {
+      console.log("not loaded");
+    }
   };
 
   return (
@@ -246,19 +355,24 @@ const RuleBar3 = () => {
           </div>
           <div className="item audio-btn">
             {/* <Button>Audio</Button> */}
-            <AudioPlayerProvider>
+            {/* <AudioPlayerProvider>
               <AudioPlayer file={audioDetails.url} />
-            </AudioPlayerProvider>
+            </AudioPlayerProvider> */}
+            <audio controls ref={audioRef}>
+              <source src={theAudio}></source>
+            </audio>
           </div>
           <div className="item more-btn">
-            <Button onClick={displayContent}>{expand}</Button>
+            <Button onClick={displayContent}>
+              <i class={expand}></i>
+            </Button>
           </div>
           <div
             className="extra-content flex-container"
             style={{ display: contentDisplay }}
           >
             <div className="audio-controls flex-item">
-              <Recorder
+              {/* <Recorder
                 record={true}
                 audioURL={audioDetails.url}
                 handleAudioStop={(data) => handleAudioStop(data)}
@@ -266,7 +380,7 @@ const RuleBar3 = () => {
                 handleReset={() => handleReset()}
                 uploadButtonDisabled={true}
                 mimeTypeToUseWhenRecording={`audio/webm`} // For specific mimetype.
-              />
+              /> */}
               {/* <ReactHowler
                   src={this.state.audio}
                   playing={this.state.playing}
@@ -278,6 +392,16 @@ const RuleBar3 = () => {
                 </form> */}
               {/* <button onClick={this.handlePause}>Pause</button>
                 <button onClick={this.handlePlay}>Play</button> */}
+              <Button onClick={microphoneRecorder}>
+                <i class="fas fa-microphone"></i> Allow Mic
+              </Button>
+              <Button onClick={startRecording}>
+                <i class="fas fa-circle"></i> Start Recording
+              </Button>
+              <Button onClick={stopRecording}>
+                {" "}
+                <i class="fas fa-stop"></i> Stop Recording
+              </Button>
             </div>
 
             <div className="trigger-event right-item">
