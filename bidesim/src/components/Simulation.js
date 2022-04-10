@@ -12,6 +12,18 @@ import DeviceGreen from "./Images/bide_display_green.png";
 import DeviceBideGreen from "./Images/bide_display_off_green.png";
 import DeviceBidePurple from "./Images/bide_display_off_purple.png";
 import DeviceRed from "./Images/bide_display_red.png";
+import DeviceBlue from "./Images/bide_display_blue.png";
+import DeviceBrightBlue from "./Images/bide_display_bright_blue.png";
+import DeviceBrightGreen from "./Images/bide_display_bright_green.png";
+import DeviceBrightPurple from "./Images/bide_display_bright_purple.png";
+import DeviceBrightYellow from "./Images/bide_display_bright_yellow.png";
+import DeviceDarkBlue from "./Images/bide_display_dark_blue.png";
+import DeviceDarkGreen from "./Images/bide_display_dark_green.png";
+import DeviceLightRed from "./Images/bide_display_light_red.png";
+import DeviceMintGreen from "./Images/bide_display_mint_green.png";
+import DevicePeach from "./Images/bide_display_peach.png";
+import DeviceVeryBrightBlue from "./Images/bide_display_very_bright_blue.png";
+import DeviceYellow from "./Images/bide_display_yellow.png";
 import Button from "react-bootstrap/esm/Button";
 import "./Simulation.css";
 import ReactHowler from "react-howler/lib/ReactHowler";
@@ -168,6 +180,7 @@ const Simulation = () => {
     console.log(effectLoop);
 
     console.log(colourObject.hex);
+    console.log(colourObject.hex === "#1273DE");
     console.log(colourObject.hex === "#b80000");
     console.log(colourObject.hex === "#db3e00");
 
@@ -179,16 +192,65 @@ const Simulation = () => {
         setBideState(DeviceRed);
         console.log("red true");
         return;
-      } else if (colourObject.hex === "#fccb00") {
+      } else if (colourObject.hex === "#db3e00") {
         setBideState(DeviceAmber);
         console.log("amber true");
         return;
-      } else if (
-        colourObject.hex === "#008b02" ||
-        colourObject.hex === "006B76"
-      ) {
+      } else if (colourObject.hex === "#008b02") {
         setBideState(DeviceGreen);
         console.log("green true");
+        return;
+      } else if (colourObject.hex === "#1273de") {
+        setBideState(DeviceBlue);
+        console.log("blue true");
+        return;
+      } else if (colourObject.hex === "#c4def6") {
+        setBideState(DeviceBrightBlue);
+        console.log("bright blue true");
+        return;
+      } else if (colourObject.hex === "#bedadc") {
+        setBideState(DeviceBrightGreen);
+        console.log("bright green true");
+        return;
+      } else if (colourObject.hex === "#d4c4fb") {
+        setBideState(DeviceBrightPurple);
+        console.log("bright purple true");
+        return;
+      } else if (colourObject.hex === "#fef3bd") {
+        setBideState(DeviceBrightYellow);
+        console.log("bright yellow true");
+        return;
+      } else if (colourObject.hex === "#004dcf") {
+        setBideState(DeviceDarkBlue);
+        console.log("dark blue true");
+        return;
+      } else if (colourObject.hex === "#006b76") {
+        setBideState(DeviceDarkGreen);
+        console.log("dark green true");
+        return;
+      } else if (colourObject.hex === "#eb9694") {
+        setBideState(DeviceLightRed);
+        console.log("light red true");
+        return;
+      } else if (colourObject.hex === "#c1e1c5") {
+        setBideState(DeviceMintGreen);
+        console.log("mint green true");
+        return;
+      } else if (colourObject.hex === "#fad0c3") {
+        setBideState(DevicePeach);
+        console.log("peach true");
+        return;
+      } else if (colourObject.hex === "#5300eb") {
+        setBideState(DeviceBidePurple);
+        console.log("purple true");
+        return;
+      } else if (colourObject.hex === "#c4def6") {
+        setBideState(DeviceVeryBrightBlue);
+        console.log("very bright blue true");
+        return;
+      } else if (colourObject.hex === "#fccb00") {
+        setBideState(DeviceYellow);
+        console.log("yellow true");
         return;
       }
 

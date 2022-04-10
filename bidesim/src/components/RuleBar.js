@@ -75,7 +75,7 @@ const RuleBar = () => {
   let db = new Localbase("db");
 
   useEffect(() => {
-    // initializeDB();
+    initializeDB();
     const getActive = localStorage.getItem("active");
     const getTime = localStorage.getItem("time");
     const getCheckboxValue = localStorage.getItem("checkboxValue");
@@ -307,6 +307,7 @@ const RuleBar = () => {
     };
   };
 
+
   const initializeDB = () => {
     db.collection("audio")
       .get()
@@ -320,6 +321,7 @@ const RuleBar = () => {
         }
       });
   };
+
 
   if (isLoading) {
     return <div>Rule is loading</div>;
