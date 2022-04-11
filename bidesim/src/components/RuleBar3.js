@@ -325,14 +325,6 @@ const RuleBar3 = () => {
     return <div>Rule is loading</div>;
   }
 
-  const loadAudio = () => {
-    if (theAudio !== "") {
-      return theAudio;
-    } else {
-      console.log("not loaded");
-    }
-  };
-
   return (
     <>
       <div className="card">

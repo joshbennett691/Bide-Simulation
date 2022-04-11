@@ -38,7 +38,7 @@ const RuleBar2 = () => {
   const [chunks, setChunks] = useState([]);
   const [duration, setDuration] = useState({});
   const [url, setUrl] = useState("");
-  const [time, setTime] = useState(["12:00", "15:00"]);
+  const [time, setTime] = useState(["02:00", "05:00"]);
   const [expand, setExpand] = useState("fas fa-caret-down");
   const [theAudio, setTheAudio] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -263,7 +263,7 @@ const RuleBar2 = () => {
       // invokeSaveAsDialog(blob);this is a tst to see how good it works and how long the audio can keep recording for
       blobToBase64(blob);
       // updateSound();
-      db.collection("audio2")
+      db.collection("audi2")
         .doc({ id: "audio2" })
         .get()
         .then((document) => {
@@ -324,14 +324,6 @@ const RuleBar2 = () => {
   if (isLoading) {
     return <div>Rule is loading</div>;
   }
-
-  const loadAudio = () => {
-    if (theAudio !== "") {
-      return theAudio;
-    } else {
-      console.log("not loaded");
-    }
-  };
 
   return (
     <>

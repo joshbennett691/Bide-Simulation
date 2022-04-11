@@ -28,6 +28,8 @@ import Button from "react-bootstrap/esm/Button";
 import "./Simulation.css";
 import ReactHowler from "react-howler/lib/ReactHowler";
 import Localbase from "localbase";
+import Moment from "moment";
+import { extendMoment } from "moment-range";
 
 const Simulation = () => {
   const [currentTime, setCurrentTime] = useState("00:00");
@@ -46,6 +48,8 @@ const Simulation = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const [effect, setEffect] = useState(localStorage.getItem("effect"));
+  const [effect2, setEffect2] = useState(localStorage.getItem("effect2"));
+  const [effect3, setEffect3] = useState(localStorage.getItem("effect3"));
   const [effectLoop, setEffectLoop] = useState(false);
   const [colour1, setColour1] = useState(localStorage.getItem("colour"));
   const [colour2, setColour2] = useState(localStorage.getItem("colour2"));
@@ -68,7 +72,7 @@ const Simulation = () => {
 
   useEffect(() => {
     const getActive1 = localStorage.getItem("active");
-    const getActive2 = localStorage.getItem("activ2");
+    const getActive2 = localStorage.getItem("active2");
     const getActive3 = localStorage.getItem("active3");
     const getRuleOneTime = localStorage.getItem("time");
     const getRuleTwoTime = localStorage.getItem("time2");
@@ -122,7 +126,42 @@ const Simulation = () => {
     return <ul>{rule1 === true && <li>{rule1}</li>}</ul>;
   };
 
+  const conflictHandler = (currentTime) => {
+    if ((active1 && active2) || (active1 && active3) || (active2 && active3)) {
+      //time 1
+      const parseTimeOneStart = parse(ruleOneTime[0], "HH:mm", new Date());
+      const timeStartOne = format(parseTimeOneStart, "HH:mm");
+      const parseTimeOneEnd = parse(ruleOneTime[1], "HH:mm", new Date());
+      const timeEndOne = format(parseTimeOneEnd, "HH:mm");
+
+      //time 2
+      const parseTimeTwoStart = parse(ruleTwoTime[0], "HH:mm", new Date());
+      const timeStartTwo = format(parseTimeTwoStart, "HH:mm");
+      const parseTimeTwoEnd = parse(ruleTwoTime[1], "HH:mm", new Date());
+      const timeEndTwo = format(parseTimeTwoEnd, "HH:mm");
+
+      //time 3
+      const parseTimeThreeStart = parse(ruleThreeTime[0], "HH:mm", new Date());
+      const timeStartThree = format(parseTimeThreeStart, "HH:mm");
+      const parseTimeThreeEnd = parse(ruleThreeTime[1], "HH:mm", new Date());
+      const timeEndThree = format(parseTimeThreeEnd, "HH:mm");
+
+      let time1 = [Moment(parseTimeOneStart), Moment(parseTimeOneEnd)];
+      let time2 = [Moment(parseTimeTwoStart), Moment(parseTimeTwoEnd)];
+      let time3 = [Moment(parseTimeThreeStart), Moment(parseTimeThreeEnd)];
+
+      let theCurrentTime = Moment(currentTime);
+
+      if (theCurrentTime.isBetween(time1[0], time2[1])) {
+        console.log("time is in rule 1 and rule 2 range");
+      } else {
+        console.log("time is not in rule 1 and rule 2 range");
+      }
+    }
+  };
+
   const handleBideSwitch = async () => {
+    conflictHandler();
     if (!bideSwitch) {
       await setBideState(DeviceBideGreen);
       await setEventBar("Device Booting...");
@@ -180,116 +219,229 @@ const Simulation = () => {
     console.log(effectLoop);
 
     console.log(colourObject.hex);
-    console.log(colourObject.hex === "#1273DE");
-    console.log(colourObject.hex === "#b80000");
-    console.log(colourObject.hex === "#db3e00");
+    console.log(colourObject2.hex);
+    console.log(colourObject3.hex);
+
+    console.log("rule 1 status: " + active1);
+    console.log("rule 2 status: " + active2);
+    console.log("rule 3 status: " + active3);
+    console.log(active3 === true);
 
     //rule1
 
     console.log(JSON.parse(effect));
-    if (JSON.parse(effect) === "Solid") {
-      if (colourObject.hex === "#b80000" || colourObject.hex === "db3e00") {
-        setBideState(DeviceRed);
-        console.log("red true");
-        return;
-      } else if (colourObject.hex === "#db3e00") {
-        setBideState(DeviceAmber);
-        console.log("amber true");
-        return;
-      } else if (colourObject.hex === "#008b02") {
-        setBideState(DeviceGreen);
-        console.log("green true");
-        return;
-      } else if (colourObject.hex === "#1273de") {
-        setBideState(DeviceBlue);
-        console.log("blue true");
-        return;
-      } else if (colourObject.hex === "#c4def6") {
-        setBideState(DeviceBrightBlue);
-        console.log("bright blue true");
-        return;
-      } else if (colourObject.hex === "#bedadc") {
-        setBideState(DeviceBrightGreen);
-        console.log("bright green true");
-        return;
-      } else if (colourObject.hex === "#d4c4fb") {
-        setBideState(DeviceBrightPurple);
-        console.log("bright purple true");
-        return;
-      } else if (colourObject.hex === "#fef3bd") {
-        setBideState(DeviceBrightYellow);
-        console.log("bright yellow true");
-        return;
-      } else if (colourObject.hex === "#004dcf") {
-        setBideState(DeviceDarkBlue);
-        console.log("dark blue true");
-        return;
-      } else if (colourObject.hex === "#006b76") {
-        setBideState(DeviceDarkGreen);
-        console.log("dark green true");
-        return;
-      } else if (colourObject.hex === "#eb9694") {
-        setBideState(DeviceLightRed);
-        console.log("light red true");
-        return;
-      } else if (colourObject.hex === "#c1e1c5") {
-        setBideState(DeviceMintGreen);
-        console.log("mint green true");
-        return;
-      } else if (colourObject.hex === "#fad0c3") {
-        setBideState(DevicePeach);
-        console.log("peach true");
-        return;
-      } else if (colourObject.hex === "#5300eb") {
-        setBideState(DeviceBidePurple);
-        console.log("purple true");
-        return;
-      } else if (colourObject.hex === "#c4def6") {
-        setBideState(DeviceVeryBrightBlue);
-        console.log("very bright blue true");
-        return;
-      } else if (colourObject.hex === "#fccb00") {
-        setBideState(DeviceYellow);
-        console.log("yellow true");
-        return;
-      }
-
-      //rule2
-      if (colourObject2.hex === "#b80000" || colourObject2.hex === "db3e00") {
-        setBideState(DeviceRed);
-        console.log("red true");
-        return;
-      } else if (colourObject2.hex === "#fccb00") {
-        setBideState(DeviceAmber);
-        console.log("amber true");
-        return;
-      } else if (
-        colourObject2.hex === "#008b02" ||
-        colourObject2.hex === "006B76"
-      ) {
-        setBideState(DeviceGreen);
-        console.log("green true");
-        return;
-      }
-
-      //rule3
-      if (colourObject3.hex === "#b80000" || colourObject3.hex === "db3e00") {
-        setBideState(DeviceRed);
-        console.log("red true");
-        return;
-      } else if (colourObject3.hex === "#fccb00") {
-        setBideState(DeviceAmber);
-        console.log("amber true");
-        return;
-      } else if (
-        colourObject3.hex === "#008b02" ||
-        colourObject3.hex === "006B76"
-      ) {
-        setBideState(DeviceGreen);
-        console.log("green true");
-        return;
+    if (active1 === true) {
+      if (JSON.parse(effect) === "Solid") {
+        if (colourObject.hex === "#b80000" || colourObject.hex === "db3e00") {
+          setBideState(DeviceRed);
+          console.log("red true");
+          return;
+        } else if (colourObject.hex === "#db3e00") {
+          setBideState(DeviceAmber);
+          console.log("amber true");
+          return;
+        } else if (colourObject.hex === "#008b02") {
+          setBideState(DeviceGreen);
+          console.log("green true");
+          return;
+        } else if (colourObject.hex === "#1273de") {
+          setBideState(DeviceBlue);
+          console.log("blue true");
+          return;
+        } else if (colourObject.hex === "#c4def6") {
+          setBideState(DeviceBrightBlue);
+          console.log("bright blue true");
+          return;
+        } else if (colourObject.hex === "#bedadc") {
+          setBideState(DeviceBrightGreen);
+          console.log("bright green true");
+          return;
+        } else if (colourObject.hex === "#d4c4fb") {
+          setBideState(DeviceBrightPurple);
+          console.log("bright purple true");
+          return;
+        } else if (colourObject.hex === "#fef3bd") {
+          setBideState(DeviceBrightYellow);
+          console.log("bright yellow true");
+          return;
+        } else if (colourObject.hex === "#004dcf") {
+          setBideState(DeviceDarkBlue);
+          console.log("dark blue true");
+          return;
+        } else if (colourObject.hex === "#006b76") {
+          setBideState(DeviceDarkGreen);
+          console.log("dark green true");
+          return;
+        } else if (colourObject.hex === "#eb9694") {
+          setBideState(DeviceLightRed);
+          console.log("light red true");
+          return;
+        } else if (colourObject.hex === "#c1e1c5") {
+          setBideState(DeviceMintGreen);
+          console.log("mint green true");
+          return;
+        } else if (colourObject.hex === "#fad0c3") {
+          setBideState(DevicePeach);
+          console.log("peach true");
+          return;
+        } else if (colourObject.hex === "#5300eb") {
+          setBideState(DeviceBidePurple);
+          console.log("purple true");
+          return;
+        } else if (colourObject.hex === "#c4def6") {
+          setBideState(DeviceVeryBrightBlue);
+          console.log("very bright blue true");
+          return;
+        } else if (colourObject.hex === "#fccb00") {
+          setBideState(DeviceYellow);
+          console.log("yellow true");
+          return;
+        }
       }
     }
+
+    //rule2
+    if (active2 === true) {
+      if (JSON.parse(effect2) === "Solid") {
+        if (colourObject2.hex === "#b80000" || colourObject2.hex === "db3e00") {
+          setBideState(DeviceRed);
+          console.log("red true");
+          return;
+        } else if (colourObject2.hex === "#db3e00") {
+          setBideState(DeviceAmber);
+          console.log("amber true");
+          return;
+        } else if (colourObject2.hex === "#008b02") {
+          setBideState(DeviceGreen);
+          console.log("green true");
+          return;
+        } else if (colourObject2.hex === "#1273de") {
+          setBideState(DeviceBlue);
+          console.log("blue true");
+          return;
+        } else if (colourObject2.hex === "#c4def6") {
+          setBideState(DeviceBrightBlue);
+          console.log("bright blue true");
+          return;
+        } else if (colourObject2.hex === "#bedadc") {
+          setBideState(DeviceBrightGreen);
+          console.log("bright green true");
+          return;
+        } else if (colourObject2.hex === "#d4c4fb") {
+          setBideState(DeviceBrightPurple);
+          console.log("bright purple true");
+          return;
+        } else if (colourObject2.hex === "#fef3bd") {
+          setBideState(DeviceBrightYellow);
+          console.log("bright yellow true");
+          return;
+        } else if (colourObject2.hex === "#004dcf") {
+          setBideState(DeviceDarkBlue);
+          console.log("dark blue true");
+          return;
+        } else if (colourObject2.hex === "#006b76") {
+          setBideState(DeviceDarkGreen);
+          console.log("dark green true");
+          return;
+        } else if (colourObject2.hex === "#eb9694") {
+          setBideState(DeviceLightRed);
+          console.log("light red true");
+          return;
+        } else if (colourObject2.hex === "#c1e1c5") {
+          setBideState(DeviceMintGreen);
+          console.log("mint green true");
+          return;
+        } else if (colourObject2.hex === "#fad0c3") {
+          setBideState(DevicePeach);
+          console.log("peach true");
+          return;
+        } else if (colourObject2.hex === "#5300eb") {
+          setBideState(DeviceBidePurple);
+          console.log("purple true");
+          return;
+        } else if (colourObject2.hex === "#c4def6") {
+          setBideState(DeviceVeryBrightBlue);
+          console.log("very bright blue true");
+          return;
+        } else if (colourObject2.hex === "#fccb00") {
+          setBideState(DeviceYellow);
+          console.log("yellow true");
+          return;
+        }
+      }
+    }
+
+    //rule3
+    if (active3 === true) {
+      if (JSON.parse(effect3) === "Solid") {
+        if (colourObject3.hex === "#b80000" || colourObject3.hex === "db3e00") {
+          setBideState(DeviceRed);
+          console.log("red true");
+          return;
+        } else if (colourObject3.hex === "#db3e00") {
+          setBideState(DeviceAmber);
+          console.log("amber true");
+          return;
+        } else if (colourObject3.hex === "#008b02") {
+          setBideState(DeviceGreen);
+          console.log("green true");
+          return;
+        } else if (colourObject3.hex === "#1273de") {
+          setBideState(DeviceBlue);
+          console.log("blue true");
+          return;
+        } else if (colourObject3.hex === "#c4def6") {
+          setBideState(DeviceBrightBlue);
+          console.log("bright blue true");
+          return;
+        } else if (colourObject3.hex === "#bedadc") {
+          setBideState(DeviceBrightGreen);
+          console.log("bright green true");
+          return;
+        } else if (colourObject3.hex === "#d4c4fb") {
+          setBideState(DeviceBrightPurple);
+          console.log("bright purple true");
+          return;
+        } else if (colourObject3.hex === "#fef3bd") {
+          setBideState(DeviceBrightYellow);
+          console.log("bright yellow true");
+          return;
+        } else if (colourObject3.hex === "#004dcf") {
+          setBideState(DeviceDarkBlue);
+          console.log("dark blue true");
+          return;
+        } else if (colourObject3.hex === "#006b76") {
+          setBideState(DeviceDarkGreen);
+          console.log("dark green true");
+          return;
+        } else if (colourObject3.hex === "#eb9694") {
+          setBideState(DeviceLightRed);
+          console.log("light red true");
+          return;
+        } else if (colourObject3.hex === "#c1e1c5") {
+          setBideState(DeviceMintGreen);
+          console.log("mint green true");
+          return;
+        } else if (colourObject3.hex === "#fad0c3") {
+          setBideState(DevicePeach);
+          console.log("peach true");
+          return;
+        } else if (colourObject3.hex === "#5300eb") {
+          setBideState(DeviceBidePurple);
+          console.log("purple true");
+          return;
+        } else if (colourObject3.hex === "#c4def6") {
+          setBideState(DeviceVeryBrightBlue);
+          console.log("very bright blue true");
+          return;
+        } else if (colourObject3.hex === "#fccb00") {
+          setBideState(DeviceYellow);
+          console.log("yellow true");
+          return;
+        }
+      }
+    }
+
     if (JSON.parse(effect) === "Traffic Light") {
       await setBideState(DeviceRed);
       await delay(1000);
